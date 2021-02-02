@@ -1,1 +1,31 @@
 
+ //script upload
+
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size']     = '100';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '768';
+
+        $this->load->library('upload', $config);
+
+        // Alternately you can set preferences by calling the ``initialize()`` method. Useful if you auto-load the class:
+        $this->upload->initialize($config);
+
+        if($this->upload->do_upload('foto')){
+            $data = array(
+            'nis' => $nis,
+            'nama' => $nama,
+            'tempat_lahir' => $tempat_lahir,
+            'tgl_lahir' => $tgl_lahir,
+            'alamat' => $alamat,
+            'foto' => $this->upload->data('file_name'),
+          );
+          $this->Siswa_model->insert($data);
+          redirect('siswa');
+        }else{
+           $error = array('error' => $this->upload->display_errors());
+           var_dump($error);
+        }
+
+        //end script upload
