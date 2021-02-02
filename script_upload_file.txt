@@ -42,3 +42,47 @@ class f_pdf {
         include_once APPPATH . '/third_party/fpdf181/fpdf.php';
     }
 }
+
+
+
+
+
+
+public function export(){
+        $report = $this->Report_model->getAllData();
+        ob_start();
+        $pdf = new FPDF();
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+         $pdf->setFont('Arial','I',9);
+            $pdf->setFillColor(255,255,255);
+            $pdf->cell(90,6,"Laporan Data Perpustakaan",0,0,'L',1); 
+            $pdf->cell(100,6,"(A4 - Portrait) - Printed date : " . date('d-M-Y'),0,1,'R',1); 
+            $pdf->Ln(2);
+            $pdf->setFont('Arial','B',6);
+            $pdf->setFillColor(230,230,200);
+            $pdf->cell(10,10,'No.',1,0,'L',1);
+            $pdf->cell(40,10,'NIS',1,0,'L',1);
+            $pdf->cell(40,10,'NAMA SISWA',1,0,'L',1);
+            $pdf->cell(35,10,'BUKU',1,0,'C',1);
+            $pdf->cell(20,10,'STATUS',1,0,'C',1);
+            $pdf->cell(20,10,'DENDA',1,0,'C',1);
+            $pdf->cell(25,10,'TANGGAL KEMBALI',1,1,'C',1);
+            $no = 1;
+            foreach ($report as $r) {
+                $pdf->Ln(0);
+                $pdf->setFont('Arial','B',6);
+                $pdf->setFillColor(256,256,256);
+                $pdf->cell(10,10,$no,1,0,'L',1);
+                $pdf->cell(40,10,$r->nis,1,0,'L',1);
+                $pdf->cell(40,10,$r->nama,1,0,'L',1);
+                $pdf->cell(35,10,$r->judul,1,0,'C',1);
+                $pdf->cell(20,10,$r->status,1,0,'C',1);
+                $pdf->cell(20,10,$r->denda,1,0,'C',1);
+                $pdf->cell(25,10,$r->tgl_kembali,1,1,'C',1);   
+                $no++;
+            }
+
+        $pdf->Output();
+        ob_end_flush();
+    }
